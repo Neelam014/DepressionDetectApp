@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+
+{% block title %}Reports{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4">Your Assessment Reports</h2>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }} alert-dismissible fade show">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    {% if has_data %}
+        <!-- Depression Score Progress Graph -->
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <h5 class="card-title mb-0">Depression Score Progress</h5>
+            </div>
+            <div class="card-body">
+                <div class="text-center">
+                    <img src="data:image/png;base64,{{ plot_url }}" 
+                         alt="Depression Score Progress" 
+                         class="img-fluid"
+                         style="max-width: 100%; height: auto;">
+                </div>
+                <div class="mt-3">
+                    <p class="text-muted">
+                        This graph shows your depression scores over time. The colors indicate different severity levels:
+                    </p>
+                    <ul class="list-unstyled">
+                        <li><span class="badge bg-success">●</span> Mild (0-3)</li>
+                        <li><span class="badge bg-warning">●</span> Moderate (4-7)</li>
+                        <li><span class="badge bg-danger">●</span> Severe (8-10)</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Assessment History Table -->
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h5 class="card-title mb-0">Assessment History</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Score (0-10)</th>
+                                <th>Severity</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for assessment in assessments %}
+                            <tr>
+                                <td>{{ assessment.date.strftime('%Y-%m-%d %H:%M') }}</td>
+                                <td>{{ "%.1f"|format(assessment.phq9_score) }}</td>
+                                <td>
+                                    <span class="badge 
+                                        {% if assessment.depression_severity == 'Mild' %}bg-success
+                                        {% elif assessment.depression_severity == 'Moderate' %}bg-warning
+                                        {% else %}bg-danger{% endif %}">
+                                        {{ assessment.depression_severity }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <a href="{{ url_for('results', assessment_id=assessment.id) }}" 
+                                       class="btn btn-sm btn-primary">
+                                        View Details
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <div class="alert alert-info">
+            <p>You haven't taken any assessments yet. Take your first assessment to start tracking your mental health journey.</p>
+            <a href="{{ url_for('assessment') }}" class="btn btn-primary mt-2">Take Assessment</a>
+        </div>
+    {% endif %}
+</div>
+
+<style>
+.bg-orange {
+    background-color: #fd7e14;
+}
+</style>
+{% endblock %}

@@ -1,0 +1,139 @@
+{% extends "base.html" %}
+
+{% block title %}Depression Assessment{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4">Depression Assessment</h2>
+    
+    <form method="POST" class="needs-validation" novalidate>
+        <!-- Additional Information -->
+        <div class="card mb-4">
+            <div class="card-header bg-info text-white">
+                <h4 class="mb-0">Personal Information</h4>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label for="age" class="form-label">Age Group</label>
+                        <select class="form-select" id="age" name="age" required>
+                            <option value="">Choose...</option>
+                            <option value="teen">Teen (13-19)</option>
+                            <option value="young_adult">Young Adult (20-29)</option>
+                            <option value="adult">Adult (30-39)</option>
+                            <option value="middle_age">Middle Age (40-49)</option>
+                            <option value="senior">Senior (50-60)</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="status" class="form-label">Status</label>
+                        <select class="form-select" id="status" name="status" required>
+                            <option value="">Choose...</option>
+                            <option value="housewife">Housewife</option>
+                            <option value="working_women">Working Women</option>
+                            <option value="student">Student</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">Family History of Depression</label>
+                        <div class="mt-2">
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="family_history" 
+                                       id="family_yes" value="true" required>
+                                <label class="form-check-label" for="family_yes">Yes</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="family_history" 
+                                       id="family_no" value="false">
+                                <label class="form-check-label" for="family_no">No</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PHQ-9 Assessment -->
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">Over the last 2 weeks, how often have you been bothered by any of the following problems?</h4>
+            </div>
+            <div class="card-body">
+                {% set questions = [
+                    "Little interest or pleasure in doing things",
+                    "Feeling down, depressed, or hopeless",
+                    "Trouble falling or staying asleep, or sleeping too much",
+                    "Feeling tired or having little energy",
+                    "Poor appetite or overeating",
+                    "Feeling bad about yourself or that you are a failure or have let yourself or your family down",
+                    "Trouble concentrating on things, such as reading the newspaper or watching television",
+                    "Moving or speaking so slowly that other people could have noticed. Or the opposite - being so fidgety or restless that you have been moving around a lot more than usual",
+                    "Thoughts that you would be better off dead or of hurting yourself in some way"
+                ] %}
+                
+                {% for i in range(9) %}
+                <div class="mb-3">
+                    <label class="form-label">{{ i+1 }}. {{ questions[i] }}</label>
+                    <div class="btn-group w-100" role="group">
+                        <input type="radio" class="btn-check" name="q{{ i+1 }}" id="q{{ i+1 }}_0" value="0" required>
+                        <label class="btn btn-outline-secondary" for="q{{ i+1 }}_0">Not at all</label>
+                        
+                        <input type="radio" class="btn-check" name="q{{ i+1 }}" id="q{{ i+1 }}_1" value="1">
+                        <label class="btn btn-outline-secondary" for="q{{ i+1 }}_1">Several days</label>
+                        
+                        <input type="radio" class="btn-check" name="q{{ i+1 }}" id="q{{ i+1 }}_2" value="2">
+                        <label class="btn btn-outline-secondary" for="q{{ i+1 }}_2">More than half the days</label>
+                        
+                        <input type="radio" class="btn-check" name="q{{ i+1 }}" id="q{{ i+1 }}_3" value="3">
+                        <label class="btn btn-outline-secondary" for="q{{ i+1 }}_3">Nearly every day</label>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Written Response -->
+        <div class="card mb-4">
+            <div class="card-header bg-info text-white">
+                <h4 class="mb-0">Additional Information</h4>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <label for="written_response" class="form-label">
+                        Please describe how you've been feeling lately and any specific concerns you'd like to share:
+                    </label>
+                    <textarea class="form-control" id="written_response" name="written_response" rows="4" 
+                              placeholder="Your response helps us better understand your situation..." required></textarea>
+                    <div class="form-text">
+                        Your response will be analyzed by our AI models to provide more accurate recommendations.
+                        This helps us better understand your situation and adjust our assessment accordingly.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center mb-4">
+            <button type="submit" class="btn btn-primary btn-lg">Submit Assessment</button>
+        </div>
+    </form>
+</div>
+
+{% block extra_js %}
+<script>
+// Form validation
+(function () {
+    'use strict'
+    var forms = document.querySelectorAll('.needs-validation')
+    Array.prototype.slice.call(forms).forEach(function (form) {
+        form.addEventListener('submit', function (event) {
+            if (!form.checkValidity()) {
+                event.preventDefault()
+                event.stopPropagation()
+            }
+            form.classList.add('was-validated')
+        }, false)
+    })
+})()
+</script>
+{% endblock %}
+{% endblock %}

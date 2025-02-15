@@ -1,0 +1,183 @@
+{% extends "base.html" %}
+
+{% block title %}Assessment Results{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4">Your Depression Assessment Results</h2>
+
+    <!-- PHQ-9 Score Card -->
+    <div class="card mb-4">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">PHQ-9 Assessment Score</h4>
+        </div>
+        <div class="card-body">
+            <h5 class="card-title mb-4">PHQ-9 Assessment Score</h5>
+            <div class="score-display text-center mb-4">
+                <h2 class="display-4">Your Score: {{ "%.1f"|format(assessment.phq9_score) }}/10</h2>
+            </div>
+            <p class="lead text-center">Depression Severity: <strong>{{ assessment.depression_severity }}</strong></p>
+        </div>
+    </div>
+
+    <!-- Model Analysis Section -->
+    <div class="card mb-4">
+        <div class="card-header bg-info text-white">
+            <h4 class="mb-0">Model Contributions to Your Result</h4>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>SVM Model Analysis</h5>
+                    <p>Based on your PHQ-9 responses and other structured data:</p>
+                    <ul class="list-unstyled">
+                        <li><i class="fas fa-chart-line me-2"></i>Initial Prediction: {{ assessment.depression_severity }}</li>
+                        <li><i class="fas fa-percentage me-2"></i>Confidence: {{ "%.1f"|format(assessment.svm_confidence * 100) }}%</li>
+                    </ul>
+                </div>
+                <div class="col-md-6">
+                    <h5>LSTM Sentiment Analysis</h5>
+                    <p>Based on your written response:</p>
+                    <ul class="list-unstyled">
+                        <li><i class="fas fa-brain me-2"></i>Sentiment: {{ assessment.sentiment }}</li>
+                        <li><i class="fas fa-percentage me-2"></i>Confidence: {{ "%.1f"|format(assessment.lstm_confidence * 100) }}%</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Model Confidence Scores -->
+    <div class="card mb-4">
+        <div class="card-header bg-success text-white">
+            <h4 class="mb-0">Model Confidence Analysis</h4>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="text-center">
+                        <h5>SVM Model</h5>
+                        <div class="progress-circle" data-value="{{ assessment.svm_confidence * 100 }}">
+                            <span>{{ "%.1f"|format(assessment.svm_confidence * 100) }}%</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="text-center">
+                        <h5>LSTM Model</h5>
+                        <div class="progress-circle" data-value="{{ assessment.lstm_confidence * 100 }}">
+                            <span>{{ "%.1f"|format(assessment.lstm_confidence * 100) }}%</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="text-center">
+                        <h5>Combined Confidence</h5>
+                        <div class="progress-circle" data-value="{{ ((assessment.svm_confidence + assessment.lstm_confidence) / 2) * 100 }}">
+                            <span>{{ "%.1f"|format(((assessment.svm_confidence + assessment.lstm_confidence) / 2) * 100) }}%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- LSTM Impact Analysis -->
+    <div class="card mb-4">
+        <div class="card-header bg-warning">
+            <h4 class="mb-0">Sentiment Analysis Impact</h4>
+        </div>
+        <div class="card-body">
+            <p class="lead">
+                Your written response suggests a {{ assessment.sentiment.lower() }} sentiment, which 
+                {% if assessment.sentiment == 'Negative' %}
+                    increased your depression severity level.
+                {% else %}
+                    did not change your depression severity level.
+                {% endif %}
+            </p>
+            <div class="alert alert-info">
+                <i class="fas fa-info-circle me-2"></i>
+                <strong>How this works:</strong> Our LSTM model analyzes your written responses for signs of depression. 
+                A negative sentiment can increase the severity level, while neutral or positive sentiments maintain the initial assessment.
+            </div>
+        </div>
+    </div>
+
+    <!-- Recommendations -->
+    <div class="card mb-4">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">Recommendations</h4>
+        </div>
+        <div class="card-body">
+            <div class="recommendations">
+                {{ assessment.recommendations|safe }}
+            </div>
+            <div class="mt-4">
+                <a href="{{ url_for('mindful_activities') }}" class="btn btn-primary">
+                    <i class="fas fa-heart me-2"></i>View Mindful Activities
+                </a>
+                <a href="{{ url_for('assessment') }}" class="btn btn-outline-primary">
+                    <i class="fas fa-clipboard-list me-2"></i>Take Another Assessment
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block extra_css %}
+<style>
+.progress-circle {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    background-color: #f0f0f0;
+    position: relative;
+    margin: 20px auto;
+}
+
+.progress-circle span {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+.recommendations ul {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+.recommendations li {
+    margin-bottom: 1rem;
+    padding-left: 2rem;
+    position: relative;
+}
+
+.recommendations li:before {
+    content: "•";
+    color: #007bff;
+    font-size: 1.5em;
+    position: absolute;
+    left: 0.5rem;
+}
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize progress circles
+    document.querySelectorAll('.progress-circle').forEach(circle => {
+        const value = circle.getAttribute('data-value');
+        circle.style.background = `conic-gradient(
+            #28a745 ${value * 3.6}deg,
+            #f0f0f0 ${value * 3.6}deg
+        )`;
+    });
+});
+</script>
+{% endblock %}
+{% endblock %}

@@ -1,0 +1,259 @@
+{% extends "base.html" %}
+
+{% block title %}Mindful Activities{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4">Mindful Activities</h2>
+
+    <!-- Quick Access Activities -->
+    <div class="row mb-4">
+        <div class="col-md-4 mb-3">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <i class="fas fa-lungs fa-3x text-primary mb-3"></i>
+                    <h4>Breathing Exercise</h4>
+                    <p>Take a 5-minute break for mindful breathing</p>
+                    <button class="btn btn-primary" onclick="startBreathingExercise()">
+                        Start Exercise
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <i class="fas fa-brain fa-3x text-success mb-3"></i>
+                    <h4>Meditation Timer</h4>
+                    <p>Set a timer for your meditation session</p>
+                    <button class="btn btn-success" onclick="startMeditation()">
+                        Start Meditation
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <i class="fas fa-journal-whills fa-3x text-info mb-3"></i>
+                    <h4>Gratitude Journal</h4>
+                    <p>Write down things you're grateful for</p>
+                    <button class="btn btn-info" onclick="openGratitudeJournal()">
+                        Open Journal
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Daily Activities -->
+    <div class="card mb-4">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">Daily Activities</h4>
+        </div>
+        <div class="card-body">
+            <div class="list-group">
+                <div class="list-group-item">
+                    <h5 class="mb-1">Morning Routine</h5>
+                    <p class="mb-1">Start your day with these mindful activities:</p>
+                    <ul>
+                        <li>5 minutes of deep breathing</li>
+                        <li>10 minutes of gentle stretching</li>
+                        <li>Write 3 things you're grateful for</li>
+                    </ul>
+                </div>
+                <div class="list-group-item">
+                    <h5 class="mb-1">Afternoon Break</h5>
+                    <p class="mb-1">Take a mindful break during your day:</p>
+                    <ul>
+                        <li>3-minute mindfulness meditation</li>
+                        <li>Short walk outside</li>
+                        <li>Mindful eating during lunch</li>
+                    </ul>
+                </div>
+                <div class="list-group-item">
+                    <h5 class="mb-1">Evening Wind-down</h5>
+                    <p class="mb-1">Prepare for restful sleep:</p>
+                    <ul>
+                        <li>10 minutes of relaxation exercises</li>
+                        <li>Reflect on positive moments from your day</li>
+                        <li>Practice calming visualization</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Resources -->
+    <div class="card">
+        <div class="card-header bg-info text-white">
+            <h4 class="mb-0">Additional Resources</h4>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-4 mb-3">
+                    <h5>Recommended Apps</h5>
+                    <ul class="list-unstyled">
+                        <li><i class="fas fa-mobile-alt me-2"></i>Headspace</li>
+                        <li><i class="fas fa-mobile-alt me-2"></i>Calm</li>
+                        <li><i class="fas fa-mobile-alt me-2"></i>Insight Timer</li>
+                    </ul>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <h5>Books</h5>
+                    <ul class="list-unstyled">
+                        <li><i class="fas fa-book me-2"></i>The Miracle of Mindfulness</li>
+                        <li><i class="fas fa-book me-2"></i>Wherever You Go, There You Are</li>
+                        <li><i class="fas fa-book me-2"></i>Real World Mindfulness</li>
+                    </ul>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <h5>Online Resources</h5>
+                    <ul class="list-unstyled">
+                        <li><i class="fas fa-globe me-2"></i>Mindful.org</li>
+                        <li><i class="fas fa-globe me-2"></i>Meditation Oasis</li>
+                        <li><i class="fas fa-globe me-2"></i>UCLA Mindful</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modals -->
+<div class="modal fade" id="breathingModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Breathing Exercise</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body text-center">
+                <div id="breathingCircle" class="mb-3">
+                    <div class="circle"></div>
+                </div>
+                <p id="breathingText">Breathe in...</p>
+                <div id="breathingTimer" class="h4 mb-3">5:00</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block extra_css %}
+<style>
+.circle {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    background-color: rgba(75, 192, 192, 0.2);
+    border: 2px solid rgb(75, 192, 192);
+    margin: 0 auto;
+    animation: pulse 8s infinite;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    25% { transform: scale(1.2); }
+    50% { transform: scale(1); }
+    75% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+}
+
+.gratitude-input {
+    height: 150px;
+}
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function startBreathingExercise() {
+    const modal = new bootstrap.Modal(document.getElementById('breathingModal'));
+    modal.show();
+    
+    let timeLeft = 300; // 5 minutes in seconds
+    const timerDisplay = document.getElementById('breathingTimer');
+    const breathingText = document.getElementById('breathingText');
+    
+    const timer = setInterval(() => {
+        timeLeft--;
+        const minutes = Math.floor(timeLeft / 60);
+        const seconds = timeLeft % 60;
+        timerDisplay.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+        
+        if (timeLeft <= 0) {
+            clearInterval(timer);
+            modal.hide();
+        }
+    }, 1000);
+    
+    // Alternate breathing text
+    let isBreathingIn = true;
+    setInterval(() => {
+        breathingText.textContent = isBreathingIn ? "Breathe out..." : "Breathe in...";
+        isBreathingIn = !isBreathingIn;
+    }, 4000);
+}
+
+function startMeditation() {
+    const duration = prompt("Enter meditation duration in minutes:", "10");
+    if (duration) {
+        alert(`Starting ${duration} minute meditation session...`);
+        // Implement meditation timer logic
+    }
+}
+
+function openGratitudeJournal() {
+    const entries = JSON.parse(localStorage.getItem('gratitudeEntries') || '[]');
+    const today = new Date().toISOString().split('T')[0];
+    
+    const modalHtml = `
+        <div class="modal fade" id="gratitudeModal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Gratitude Journal</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="gratitudeForm">
+                            <div class="mb-3">
+                                <label class="form-label">What are you grateful for today?</label>
+                                <textarea class="form-control gratitude-input" required></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Save Entry</button>
+                        </form>
+                        <hr>
+                        <h6>Previous Entries</h6>
+                        <div class="previous-entries">
+                            ${entries.map(entry => `
+                                <div class="card mb-2">
+                                    <div class="card-body">
+                                        <small class="text-muted">${entry.date}</small>
+                                        <p class="mb-0">${entry.text}</p>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    document.body.insertAdjacentHTML('beforeend', modalHtml);
+    const modal = new bootstrap.Modal(document.getElementById('gratitudeModal'));
+    modal.show();
+    
+    document.getElementById('gratitudeForm').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const text = e.target.querySelector('textarea').value;
+        entries.unshift({ date: today, text });
+        localStorage.setItem('gratitudeEntries', JSON.stringify(entries));
+        modal.hide();
+        document.getElementById('gratitudeModal').remove();
+    });
+}
+</script>
+{% endblock %}
+{% endblock %}

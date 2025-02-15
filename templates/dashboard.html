@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row mb-4">
+        <div class="col">
+            <h2>Welcome, {{ current_user.name }}!</h2>
+            <p class="text-muted">Track your mental health journey and access resources to support your well-being.</p>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="row mb-4">
+        <div class="col-md-4 mb-3">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <i class="fas fa-clipboard-list fa-3x mb-3 text-primary"></i>
+                    <h5 class="card-title">Take Assessment</h5>
+                    <p class="card-text">Complete the PHQ-9 questionnaire to assess your current mental health state.</p>
+                    <a href="{{ url_for('assessment') }}" class="btn btn-primary">Start Assessment</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-3">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <i class="fas fa-chart-line fa-3x mb-3 text-success"></i>
+                    <h5 class="card-title">View Reports</h5>
+                    <p class="card-text">Track your progress and view detailed assessment reports over time.</p>
+                    <a href="{{ url_for('reports') }}" class="btn btn-success">View Reports</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-3">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <i class="fas fa-heart fa-3x mb-3 text-danger"></i>
+                    <h5 class="card-title">Mindful Activities</h5>
+                    <p class="card-text">Access guided activities and resources for mental well-being.</p>
+                    <a href="{{ url_for('mindful_activities') }}" class="btn btn-danger">Explore Activities</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Resources and Tips -->
+    <div class="card">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">Mental Health Resources & Tips</h5>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <h6><i class="fas fa-lightbulb text-warning me-2"></i>Quick Tips</h6>
+                    <ul class="list-unstyled">
+                        <li class="mb-2">✨ Practice deep breathing exercises daily</li>
+                        <li class="mb-2">✨ Maintain a regular sleep schedule</li>
+                        <li class="mb-2">✨ Stay connected with friends and family</li>
+                        <li class="mb-2">✨ Take regular breaks during work</li>
+                    </ul>
+                </div>
+                <div class="col-md-6">
+                    <h6><i class="fas fa-phone text-success me-2"></i>Helpline Numbers</h6>
+                    <ul class="list-unstyled">
+                        <li class="mb-2">🆘 National Crisis Line: 988</li>
+                        <li class="mb-2">🆘 Crisis Text Line: Text HOME to 741741</li>
+                        <li class="mb-2">🆘 SAMHSA's Helpline: 1-800-662-4357</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
